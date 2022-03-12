@@ -1,7 +1,6 @@
 ﻿#include <iostream>
 #include <string>
 #include <iomanip>
-#include <malloc.h>
 using namespace std;
 
 
@@ -180,8 +179,16 @@ void insert_race(Board& airport) {
 
 
 race_data delete_race(Board& airportboard, int id) {
-	race_data deleted_race = airportboard.mas[id];
-	for (int i = id; i < airportboard.count_races; i++) {
+	race_data deleted_race;
+	int index;
+	for (int i = 0; i < airportboard.count_races; i++) {
+		if (airportboard.mas[i].case_number == id) {
+			deleted_race = airportboard.mas[i];
+			index = i;
+			break;
+		}
+	}
+	for (int i = index; i < airportboard.count_races - 1; i++) {
 		airportboard.mas[i] = airportboard.mas[i + 1];
 	}
 	airportboard.count_races--;
@@ -218,5 +225,4 @@ int find_flights_to(Board airport, string destination, int * massive) {
 	}
 	cout << endl;
 	return j;
-
 }

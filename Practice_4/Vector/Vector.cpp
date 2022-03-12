@@ -148,8 +148,16 @@ void insert_race(Board& airport) {
 
 
 race_data delete_race(Board& airportboard, int id) {
-	race_data deleted_race = airportboard.mas[id];
-	airportboard.mas.erase(airportboard.mas.begin() + id);
+	race_data deleted_race;
+	int index;
+	for (int i = 0; i < airportboard.mas.size(); i++) {
+		if (airportboard.mas[i].case_number == id) {
+			deleted_race = airportboard.mas[i];
+			index = i;
+			break;
+		}
+	}
+	airportboard.mas.erase(airportboard.mas.begin() + index);
 	return deleted_race;
 
 }

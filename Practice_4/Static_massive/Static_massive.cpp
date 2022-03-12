@@ -165,8 +165,16 @@ void insert_race(Board& airport) {
 
 
 race_data delete_race(Board& airportboard, int id) {
-	race_data deleted_race = airportboard.mas[id];
-	for (int i = id; i < airportboard.count_races; i++) {
+	race_data deleted_race;
+	int ind;
+	for (int i = 0; i < airportboard.count_races; i++) {
+		if (airportboard.mas[i].case_number == id) {
+			deleted_race = airportboard.mas[i];
+			ind = i;
+			break;
+		}
+	}
+	for (int i = ind; i < airportboard.count_races - 1; i++) {
 		airportboard.mas[i] = airportboard.mas[i + 1];
 	}
 	airportboard.count_races--;
