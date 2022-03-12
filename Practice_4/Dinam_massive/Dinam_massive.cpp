@@ -1,10 +1,11 @@
 ﻿#include <iostream>
 #include <string>
 #include <iomanip>
+#include <malloc.h>
 using namespace std;
 
 
-struct race_data{
+struct race_data {
 	string destin;
 	int case_number;
 	string date_departure;
@@ -12,11 +13,11 @@ struct race_data{
 	string arrival_time;
 	int free_places;
 	int delay;
-	
+
 };
 struct Board {
-	int count_races = 0;
-	race_data mas[10];
+	int count_races= 0;
+	race_data * mas;
 };
 
 race_data create_new();
@@ -35,16 +36,21 @@ void to_reserve(Board& airportboard, Board& reserve, int id);
 
 void print_withoutdelay_list(Board airport);
 
-int find_flights_to(Board airport, string destination, int masssive[]);
+int find_flights_to(Board airport, string destination, int * massive);
 
-int main(){
+int main() {
 	setlocale(LC_ALL, "");
 	int n;
+	cout << "Введите количество строк в таблице\n";
+	cin >> n;
 	Board airport1;
+	airport1.mas = new race_data[n];
 	Board reserve;
+	reserve.mas = new race_data[n];
 	int result_of_find;
-	int mas[10];
+	int * mas = new int[n];
 	int id;
+	race_data* temp;
 	int menu;
 	string destination;
 	cout << "Пользовательское меню: \n0- Для выхода;\n1- Для добавления рейса в таблицу;\n2- Удаление рейса из таблицы;\n3- Вывод таблицы на экран;\n4-Вставить информацию по новому рейсу в таблицу перед рейсом с большим номером\n5-Удалить информацию об вылетевшем рейсе и сохранить ее в архивной таблице;\n6-Вывести рейсы, готовые к вылету по расписанию (за 2 часа до времени вылета);\n7-Сформировать список номеров рейсов, вылетающих в заданный пункт назначения.\n8 - Вывести архивную таблицу рейсов\n";
@@ -52,10 +58,16 @@ int main(){
 	while (menu) {
 		switch (menu) {
 		case 1:
-			if (airport1.count_races == 10) {
-				cout << "\nДоска переполнена,для того чтобы добавить,удалите один элемент\n";
+			if (airport1.count_races == n) {
+				cout << "Переполнение\n";
+				temp = new race_data[n + 1];
+				for (int i = 0; i < n; i++) {
+					temp[i] = airport1.mas[i];
+				}
+				n++;
+				airport1.mas = temp;
 			}
-			else { add_race(airport1); }
+			add_race(airport1);
 			break;
 		case 2:
 			cout << "\nВведите id рейса\n";
@@ -66,12 +78,16 @@ int main(){
 			print_board(airport1);
 			break;
 		case 4:
-			if (airport1.count_races == 10) {
-				cout << "\nДоска переполнена для того чтобы вставить,удалите один элемент\n";
+			if (airport1.count_races == n) {
+				cout << "Переполнение\n";
+				temp = new race_data[n + 1];
+				for (int i = 0; i < n; i++) {
+					temp[i] = airport1.mas[i];
+				}
+				n++;
+				airport1.mas = temp;
 			}
-			else {
-				insert_race(airport1);
-			}
+			insert_race(airport1);
 			break;
 		case 5:
 			cout << "\nВведите id рейса\n";
@@ -86,6 +102,10 @@ int main(){
 			cin >> destination;
 			result_of_find = find_flights_to(airport1, destination, mas);
 			break;
+		case 8:
+			print_board(reserve);
+			break;
+
 		}
 		cout << "Пользовательское меню: \n0- Для выхода;\n1- Для добавления рейса в таблицу;\n2- Удаление рейса из таблицы;\n3- Вывод таблицы на экран;\n4-Вставить информацию по новому рейсу в таблицу перед рейсом с большим номером\n5-Удалить информацию об вылетевшем рейсе и сохранить ее в архивной таблице;\n6-Вывести рейсы, готовые к вылету по расписанию (за 2 часа до времени вылета);\n7-Сформировать список номеров рейсов, вылетающих в заданный пункт назначения.\n8 - Вывести архивную таблицу рейсов\n";
 		cin >> menu;
@@ -121,7 +141,7 @@ void add_race(Board& airport1) {
 void print_race(Board airport1, int i) {
 	cout << "|" << setw(10 + ((airport1.mas[i].destin).length() / 2)) << airport1.mas[i].destin << setw(10 - ((airport1.mas[i].destin).length() / 2)) << "|";
 	cout << setw(8 + to_string(airport1.mas[i].case_number).length() / 2) << airport1.mas[i].case_number << setw(9 - to_string(airport1.mas[i].case_number).length() / 2) << "|";
-	cout << setw(9) << airport1.mas[i].date_departure << setw(5) << "|";
+	cout << setw(15) << airport1.mas[i].date_departure << setw(5) << "|";
 	cout << setw(13) << airport1.mas[i].departure_time << setw(7) << "|";
 	cout << setw(11) << airport1.mas[i].arrival_time << setw(7) << "|";
 	cout << setw(14) << airport1.mas[i].free_places << setw(12) << "|";
@@ -171,7 +191,7 @@ race_data delete_race(Board& airportboard, int id) {
 
 void to_reserve(Board& airportboard, Board& reserve, int id) {
 	race_data archive = delete_race(airportboard, id);
-	reserve.mas[reserve.count_races];
+	reserve.mas[reserve.count_races] = archive;
 	reserve.count_races++;
 }
 
@@ -184,17 +204,17 @@ void print_withoutdelay_list(Board airport) {
 	}
 }
 
-int find_flights_to(Board airport, string destination, int masssive[]) {
+int find_flights_to(Board airport, string destination, int * massive) {
 	int j = 0;
 	for (int i = 0; i < airport.count_races; i++) {
 		if (airport.mas[i].destin == destination) {
-			masssive[j] = airport.mas[i].case_number;
+			massive[j] = airport.mas[i].case_number;
 			j++;
 		}
 	}
 	cout << "\nНомера рейсов в " << destination << " : ";
 	for (int i = 0; i < j; i++) {
-		cout << masssive[i] << " ";
+		cout << massive[i] << " ";
 	}
 	cout << endl;
 	return j;
