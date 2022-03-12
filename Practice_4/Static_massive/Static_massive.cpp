@@ -39,7 +39,8 @@ int find_flights_to(Board airport, string destination, int masssive[]);
 
 int main(){
 	setlocale(LC_ALL, "");
-	int n;
+	cout << "Размер таблицы ограничен: 10 строк\n";
+
 	Board airport1;
 	Board reserve;
 	int result_of_find;
@@ -86,7 +87,11 @@ int main(){
 			cin >> destination;
 			result_of_find = find_flights_to(airport1, destination, mas);
 			break;
+		case 8:
+			print_board(reserve);
+			break;
 		}
+
 		cout << "Пользовательское меню: \n0- Для выхода;\n1- Для добавления рейса в таблицу;\n2- Удаление рейса из таблицы;\n3- Вывод таблицы на экран;\n4-Вставить информацию по новому рейсу в таблицу перед рейсом с большим номером\n5-Удалить информацию об вылетевшем рейсе и сохранить ее в архивной таблице;\n6-Вывести рейсы, готовые к вылету по расписанию (за 2 часа до времени вылета);\n7-Сформировать список номеров рейсов, вылетающих в заданный пункт назначения.\n8 - Вывести архивную таблицу рейсов\n";
 		cin >> menu;
 	}
@@ -121,7 +126,7 @@ void add_race(Board& airport1) {
 void print_race(Board airport1, int i) {
 	cout << "|" << setw(10 + ((airport1.mas[i].destin).length() / 2)) << airport1.mas[i].destin << setw(10 - ((airport1.mas[i].destin).length() / 2)) << "|";
 	cout << setw(8 + to_string(airport1.mas[i].case_number).length() / 2) << airport1.mas[i].case_number << setw(9 - to_string(airport1.mas[i].case_number).length() / 2) << "|";
-	cout << setw(9) << airport1.mas[i].date_departure << setw(5) << "|";
+	cout << setw(15) << airport1.mas[i].date_departure << setw(5) << "|";
 	cout << setw(13) << airport1.mas[i].departure_time << setw(7) << "|";
 	cout << setw(11) << airport1.mas[i].arrival_time << setw(7) << "|";
 	cout << setw(14) << airport1.mas[i].free_places << setw(12) << "|";
@@ -171,7 +176,7 @@ race_data delete_race(Board& airportboard, int id) {
 
 void to_reserve(Board& airportboard, Board& reserve, int id) {
 	race_data archive = delete_race(airportboard, id);
-	reserve.mas[reserve.count_races];
+	reserve.mas[reserve.count_races] = archive;
 	reserve.count_races++;
 }
 
