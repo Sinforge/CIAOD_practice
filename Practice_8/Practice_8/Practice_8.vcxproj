@@ -141,6 +141,11 @@
   <ItemGroup>
     <ClCompile Include="Practice_8.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="f.txt" />
+    <Text Include="f1.txt" />
+    <Text Include="f2.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
