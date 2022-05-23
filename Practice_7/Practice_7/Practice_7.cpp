@@ -18,34 +18,32 @@ private:
     int size_operations = 0;
 public:
  
-    int GetElementsSize() {
+    int GetElementsSize() { // Получение размера стека операндов
         return size_elements;
     }
-    int GetOperationsSize() {
+    int GetOperationsSize() { // Получение размера стека операций
         return size_operations;
     }
-    int GetLastElement() {
+    int GetLastElement() { // Получение последнего элемента стека операций
         return elements[size_elements - 1];
     }
-    char GetLastOperation() {
+    char GetLastOperation() { // Получение последнего элемента стека операндов
         return operations[size_operations - 1];
 
     }
 
         
-        void element_push_back(int element) {
-            int* new_elems = new int[size_elements + 1];
-            for (int i = 0; i < size_elements; i++) {
-                new_elems[i] = elements[i];
-            }
-            new_elems[size_elements] = element;
-            delete[] elements;
-            elements = new_elems;
-            size_elements++;
-
-       
+    void element_push_back(int element) { // Добавить в конец стека операндов
+        int* new_elems = new int[size_elements + 1];
+        for (int i = 0; i < size_elements; i++) {
+            new_elems[i] = elements[i];
+        }
+        new_elems[size_elements] = element;
+        delete[] elements;
+        elements = new_elems;
+        size_elements++;
     }
-    int element_pop_back() {
+    int element_pop_back() { // Извлечь и удалить последний элемент из стека операндов
         int last_elem = elements[size_elements - 1];
         int* new_mas2 = new int[size_elements - 1];
         for (int i = 0; i < size_elements - 1; i++) {
@@ -58,7 +56,7 @@ public:
 
        
     }
-    void operation_push_back(char oper) {
+    void operation_push_back(char oper) { // Добавить в конец стека операций
        
         char* new_elems = new char[size_operations + 1];
         for (int i = 0; i < size_operations; i++) {
@@ -70,7 +68,7 @@ public:
         size_operations++;
         
     }
-    char operation_pop_back() {
+    char operation_pop_back() { // Извлечь и удалить послений элемент стека операций
         
         char last_elem = operations[size_operations - 1];
         char* new_mas2 = new char[size_operations - 1];
@@ -107,7 +105,7 @@ int main()
 
 }
 
-int calc(char str[]) {
+int calc(char str[]) { // Вычисляет инфиксное значение
     Stack stack;
     vector<string> symbols = getwords(str);
     for (int i = 0; i < symbols.size(); i++) {
@@ -158,7 +156,7 @@ int calc(char str[]) {
     return stack.GetLastElement();
 }
 
-vector<string> getwords(char str[]) {
+vector<string> getwords(char str[]) { // Делить инфиксное выражение на операнды и операции
     vector<string> words;
     char* pch = strtok(str, " "); //во втором параметре указаны разделители (пробел, запятая, точка)
     while (pch != NULL) //пока есть лексемы
@@ -169,7 +167,7 @@ vector<string> getwords(char str[]) {
     return words;
 }
 
-int doOperation(int num1, int num2, char operation) {
+int doOperation(int num1, int num2, char operation) { // Производит операцию
     switch (operation)
     {
     case '+':
@@ -187,7 +185,7 @@ int doOperation(int num1, int num2, char operation) {
     }
 }
 
-void calcBrack(Stack& stack) {
+void calcBrack(Stack& stack) { // Считает выражение в скобках
     if (stack.GetLastOperation() == '(') {
         stack.operation_pop_back();
     }
@@ -203,7 +201,7 @@ void calcBrack(Stack& stack) {
 
 
 
-bool IsOper(char op) {
+bool IsOper(char op) { //Определяет математический оператор или нет
     switch (op)
     {
     case '+':
@@ -226,7 +224,7 @@ bool IsOper(char op) {
 }
 
 
-int getRang(char oper) {
+int getRang(char oper) { // Определяет ранг операции(приоритет), 2 -  умножение деление, 1- сложение, вычитание; 0 - скобки и др.
     if (oper == '+' || oper == '-') return 1;
     if (oper == '/' || oper == '*') return 2;
     else return 0;
