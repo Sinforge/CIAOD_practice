@@ -19,12 +19,16 @@ public:
 
 
 int Linear_Search(int card_id, vector<Patient> table) {
+    int start = clock();
     for (int i = 0; i < table.size(); i++) {
         if (table.at(i).card_id == card_id) return i;
     }
+    int end = clock();
+    cout << "Время поиска: " << end - start << endl;
     return -1;
 }
 int Barrier_Search(int card_id, vector<Patient> table) {
+    int start = clock();
     if (table.back().card_id == card_id) return table.size() - 1;
     table.back().card_id = (card_id);
     int iter = 0;
@@ -32,6 +36,9 @@ int Barrier_Search(int card_id, vector<Patient> table) {
         if (table[iter].card_id == card_id) {break;}
         iter++;
     }
+    int end = clock();
+    cout << "Время поиска: " << end - start << endl;
+
     return iter == table.size() - 1 ? -1 : iter;
 }
 void random_input_table(vector<Patient>& table) {
@@ -50,13 +57,13 @@ int interpolationSearch(vector<Patient>table, int card_id) {
     int pos;
     int low = 0;
     int high = table.size() - 1;
-
+    int start = clock();
     while (table[low].card_id <= card_id && table[high].card_id >= card_id && low <= high) {
         if (low == high) {
             if (table[low].card_id == card_id) return low;
             return -1;
         }
-        pos = low + (((double)(high - low) /(table[high].card_id - table[low].card_id)) * (card_id - table[low].card_id));
+        pos = low + ((high - low) /(table[high].card_id - table[low].card_id)) * (card_id - table[low].card_id);
 
         if (table[pos].card_id == card_id) {
             return pos;
@@ -69,6 +76,8 @@ int interpolationSearch(vector<Patient>table, int card_id) {
         }
         
     }
+    int end = clock();
+    cout << "Время поиска: " << end - start << endl;
     return -1;
 }
 
@@ -118,28 +127,20 @@ int main()
         case 3:
             cout << "Введите номер карты\n";
             cin >> card;
-            start = clock();
             cout << Linear_Search(card, table) << endl;
-            end = clock();
-            cout << "Время поиска: " << end - start << endl;
             break;
         case 4:
             cout << "Введите номер карты\n";
             cin >> card;
-            start = clock();
             cout << Barrier_Search(card, table) << endl;
             end = clock();
-            cout << "Время поиска: " << end - start << endl;
             break;
 
         case 5:
             cout << "Введите номер карты\n";
             cin >> card;
             sort_table_by_card(table);
-            start = clock();
             cout << interpolationSearch(table, card) << endl;
-            end = clock();
-            cout << "Время поиска: " << end - start << endl;
             break;
         case 6:
             random_input_table(table);
